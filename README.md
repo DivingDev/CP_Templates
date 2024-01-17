@@ -1,1 +1,1 @@
-Templates for general techniques and algorithms
+## Templates for general techniques and algorithms
