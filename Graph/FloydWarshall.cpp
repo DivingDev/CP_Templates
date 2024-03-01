@@ -1,3 +1,5 @@
+#include <bits/stdc++.h>
+using namespace std;
 // multi source sortest paths
 // O(N^3)
 void FloydWarshall(vector<vector<int>> &matrix)
@@ -9,7 +11,8 @@ void FloydWarshall(vector<vector<int>> &matrix)
         {
             for (int j = 0; j < n; j++)
             {
-                matrix[i][j] = min(matrix[i][j], matrix[i][k] + matrix[k][j]);
+                if(matrix[i][k] < 1e8 && matrix[k][j] < 1e8)
+                    matrix[i][j] = min(matrix[i][j], matrix[i][k] + matrix[k][j]);
             }
         }
     }
