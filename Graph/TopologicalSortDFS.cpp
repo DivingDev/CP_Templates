@@ -1,15 +1,31 @@
+#include <bits/stdc++.h>
+using namespace std;
+
 // O(N+E)
+// topological order can be non-unique
+// exist only for DAG
 
-void TopoSort(int node, vector<int> &vis, stack<int> &st, vector<int> adj[])
-{
-    vis[node] = 1;
+int n; // number of vertices
+vector<vector<int>> adj; // adjacency list of graph
+vector<bool> visited;
+vector<int> ans;
 
-    for (auto it : adj[node])
-    {
-        if (!vis[it])
-        {
-            TopoSort(it, vis, st, adj);
+void dfs(int v) {
+    visited[v] = true;
+    for (int u : adj[v]) {
+        if (!visited[u])
+            dfs(u);
+    }
+    ans.push_back(v);
+}
+
+void topological_sort() {
+    visited.assign(n, false);
+    ans.clear();
+    for (int i = 0; i < n; ++i) {
+        if (!visited[i]) {
+            dfs(i);
         }
     }
-    st.push(node);
+    reverse(ans.begin(), ans.end());
 }
