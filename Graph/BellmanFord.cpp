@@ -1,4 +1,8 @@
-// sortest distance of all vertices from the source vertex
+#include <bits/stdc++.h>
+using namespace std;
+
+const int INF = 1e9;
+// single source shortest path with -ve weight edges;
 // Detects negative cycle
 // O(V*E)
 vector<int> BellmanFord(int n, int s, vector<vector<int>> &edges)
