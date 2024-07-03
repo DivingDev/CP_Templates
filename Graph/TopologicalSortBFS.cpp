@@ -1,5 +1,6 @@
+#include <bits/stdc++.h>
+using namespace std;
 // O(N+E)
-
 vector<int> TopoSort(int N, vector<int> adj[])
 {
     queue<int> q;
@@ -21,7 +22,7 @@ vector<int> TopoSort(int N, vector<int> adj[])
     {
         int node = q.front();
         q.pop();
-        topo.push(node);
+        topo.push_back(node);
         for (auto it : adj[node])
         {
             inDegree[it]--;
@@ -29,5 +30,6 @@ vector<int> TopoSort(int N, vector<int> adj[])
                 q.push(it);
         }
     }
+    if(topo.size()!=N) return {};
     return topo;
 }
