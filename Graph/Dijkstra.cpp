@@ -1,8 +1,14 @@
 #include <bits/stdc++.h>
 using namespace std;
 #define pii pair<int, int>
-// O(n + m*logm)  where n is no. of nodes and m is no. of edges
-// Single source sohortest path
+
+/*
+1. Given a directed or undirected weighted graph with n vertices and m edges.
+2. The weights of all edges are non-negative.
+
+O(n + m*logm)  where n is no. of nodes and m is no. of edges
+Single source sohortest path
+*/
 void dijkstra(int n, int s, vector<pii> adj[])
 {
     priority_queue<pii> pq; //{dist,node}
@@ -34,9 +40,11 @@ void dijkstra(int n, int s, vector<pii> adj[])
         }
     }
 }
-
-// function takes starting vertex s
-// path to any vertex t can be restored in following way
+/*
+function takes starting vertex s
+path to any vertex t can be restored in following way
+Proof: After any vertex v becomes marked, the current distance to it dist[v] is the shortest, and will no longer change.
+*/
 vector<int> restore_path(int s, int t, vector<int> const &p)
 {
     vector<int> path;
