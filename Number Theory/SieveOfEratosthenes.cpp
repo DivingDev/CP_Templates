@@ -15,4 +15,12 @@ void SieveOfEratosthenes() {
                 is_prime[j] = false;
         }
     }
+    
+    // store only ptimes
+    vector<int> primes;
+    for(int i = 2; i <= 1e6; i++) {
+        if(is_prime[i]) {
+            primes.push_back(i);
+        }
+    }
 }
