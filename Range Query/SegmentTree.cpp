@@ -1,65 +1,74 @@
 #include <bits/stdc++.h>
 using namespace std;
 
-const int N = 2e5 + 10;
-int arr[N];
 
-class SGTree
+// what to store in node?
+struct node
 {
-    vector<int> seg;
-
-public:
-    SGTree(int n)
+    int sum;
+    node()
     {
-        seg.resize(4 * n);
-    }
-
-    int operation(int &left_node, int &right_node) // may change
-    {
-        return min(left_node, right_node);
-    }
-
-    void build(int idx, int low, int high)
-    {
-        if (low == high)
-        {
-            seg[idx] = arr[low]; // may change
-            return;
-        }
-        int mid = low + (high - low) / 2;
-        build(2 * idx + 1, low, mid);
-        build(2 * idx + 2, mid + 1, high);
-        seg[idx] = operation(seg[2 * idx + 1], seg[2 * idx + 2]);
-    }
-
-    void update(int idx, int low, int high, int i, int val) // naver change this
-    {
-        if (low == high)
-        {
-            seg[idx] = val;
-            return;
-        }
-        int mid = low + (high - low) / 2;
-        if (i <= mid)
-            update(2 * idx + 1, low, mid, i, val);
-        else
-            update(2 * idx + 2, mid + 1, high, i, val);
-        seg[idx] = operation(seg[2 * idx + 1], seg[2 * idx + 2]);
-    }
-
-    int query(int idx, int low, int high, int l, int r)
-    {
-        if (high < l || r < low)
-        {
-            return 1e10; // may change
-        }
-        if (l <= low && high <= r)
-        {
-            return seg[idx];
-        }
-        int mid = low + (high - low) / 2;
-        int left = query(2 * idx + 1, low, mid, l, r);
-        int right = query(2 * idx + 2, mid + 1, high, l, r);
-        return operation(left, right);
+        sum = 0;
     }
 };
+ 
+node sgt[4 * 200000];
+
+// how to merge two segments [l,mid] and [mid+1,r] to get [l,r]
+node merge(node l, node r)
+{
+    node ans;
+    ans.sum = l.sum + r.sum;
+    return ans;
+}
+ 
+void build(int id, int l, int r)
+{
+    if (l == r)
+    {
+        // leaf node
+        sgt[id].sum = 0;
+        return;
+    }
+ 
+    int mid = l + (r - l) / 2;
+    build(2 * id + 1, l, mid);
+    build(2 * id + 2, mid + 1, r);
+    sgt[id] = merge(sgt[2 * id + 1], sgt[2 * id + 2]);
+}
+ 
+void update(int id, int l, int r, int pos, int val)
+{
+    if (pos < l || pos > r)
+    {
+        return;
+    }
+    if (l == r)
+    {
+        sgt[id].sum += val;
+        return;
+    }
+ 
+    int mid = l + (r - l) / 2;
+    update(2 * id + 1, l, mid, pos, val);
+    update(2 * id + 2, mid + 1, r, pos, val);
+    sgt[id] = merge(sgt[2 * id + 1], sgt[2 * id + 2]);
+}
+ 
+node query(int id, int l, int r, int lq, int rq)
+{
+    // no overlap
+    if (lq > r || l > rq)
+    {
+        return node();
+    }
+ 
+    // complete overlap
+    if (lq <= l && r <= rq)
+    {
+        return sgt[id];
+    }
+ 
+    int mid = l + (r - l) / 2;
+    return merge(query(2 * id + 1, l, mid, lq, rq), query(2 * id + 2, mid + 1, r, lq, rq));
+}
